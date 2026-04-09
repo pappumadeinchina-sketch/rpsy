@@ -7,6 +7,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
 
 <style>
+html, body {
+  height: 100%;
+}
+
 body {
   margin: 0;
   font-family: 'Poppins', sans-serif;
@@ -14,15 +18,14 @@ body {
   color: white;
   overflow-x: hidden;
 
-  min-height: 100vh; /* 🔥 IMPORTANT */
-  
+  min-height: 100vh;
+
   background: radial-gradient(circle at 20% 20%, #1c3a43, transparent 40%),
               radial-gradient(circle at 80% 80%, #162c33, transparent 40%),
               linear-gradient(135deg, #0f2027, #203a43, #2c5364);
 
-  background-repeat: no-repeat;  /* 🔥 prevents tiling */
-  background-size: cover;        /* 🔥 fills full screen */
-  background-attachment: fixed;  /* 🔥 smooth feel (optional) */
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 /* TOGGLE */
@@ -104,14 +107,11 @@ body {
   transform: scale(0.95);
 }
 
-.emoji {
-  font-size: 22px;
-}
-
 /* RESULT */
 #result {
   font-size: 26px;
   margin-top: 15px;
+  white-space: pre-line;
 }
 
 /* ROUND */
@@ -187,7 +187,7 @@ body.potato .ai span {
 
 <div class="container">
 
-<h1>Rock Paper Scissors</h1>
+<h1>🤖 Rock Paper Scissors</h1>
 
 <div class="score-box">
   <div class="player">
@@ -229,15 +229,35 @@ const result = document.getElementById("result");
 const restartBtn = document.getElementById("restartBtn");
 const roundEl = document.getElementById("round");
 
-/* MODE TOGGLE */
-document.getElementById("modeToggle").onclick = () => {
+/* 😈 WIN + LOSE MESSAGES */
+const winMessages = [
+  "NICEE!! 😎",
+  "WELL DONE KID 🔥",
+  "THATS HOW YOU DO IT BOII 💪",
+  "LUCK LMAO 🍀",
+  "TOUCH SOME GRASS 🌿"
+];
+
+const loseMessages = [
+  "NOOB 😂",
+  "EZ LOL 😭",
+  "BRO AIN'T TOUGH 🥀",
+  "ARE YOU COMEDY 🤡",
+  "LMAOO 💀",
+  "EZZZZZZZ 😈",
+  "LOL SKILL ISSUE 📉",
+  "BRO GET A JOB 🧑‍💼"
+];
+
+/* MODE */
+modeToggle.onclick = () => {
   potatoMode = !potatoMode;
   document.body.classList.toggle("potato");
   modeToggle.innerText = potatoMode ? "🚀 Full" : "⚙️ Lite";
 };
 
-/* SECRET CHEAT */
-document.getElementById("copyright").onclick = () => {
+/* CHEAT */
+copyright.onclick = () => {
   tapCount++;
   if (tapCount === 3) {
     cheatActive = true;
@@ -269,11 +289,11 @@ function play(userChoice) {
 
   if (winMap[userChoice] === aiChoice) {
     playerScore++;
-    showResult("🎉 YOU WIN");
+    result.innerText = "🎉 YOU WIN";
     confettiExplosion();
   } else {
     aiScore++;
-    showResult("💀 AI WINS");
+    result.innerText = "💀 AI WINS";
     loseEffect();
   }
 
@@ -281,10 +301,6 @@ function play(userChoice) {
   updateDisplay();
 
   if (round > 5) finalResult();
-}
-
-function showResult(text) {
-  result.innerText = text;
 }
 
 function confettiExplosion() {
@@ -320,9 +336,21 @@ function loseEffect() {
 function finalResult() {
   gameOver = true;
 
-  result.innerText = playerScore > aiScore
+  let finalText = playerScore > aiScore
     ? `🏆 YOU WON (${playerScore}/${aiScore})`
     : `💀 AI WON (${aiScore}/${playerScore})`;
+
+  let roast = "";
+
+  if (playerScore > aiScore) {
+    roast = cheatActive
+      ? "THATS CALLED SKILL BOII 😏"
+      : winMessages[Math.floor(Math.random()*winMessages.length)];
+  } else {
+    roast = loseMessages[Math.floor(Math.random()*loseMessages.length)];
+  }
+
+  result.innerText = finalText + "\n" + roast;
 
   restartBtn.classList.remove("hidden");
   cheatActive = false;
