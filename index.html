@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Rockpaperscissor - ZGS</title>
+<title>Rock Paper Scissors GOD MODE</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
 
 <style>
@@ -10,97 +11,152 @@ body {
   margin: 0;
   font-family: 'Poppins', sans-serif;
   text-align: center;
-  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
   color: white;
+  overflow-x: hidden;
 }
 
+/* CENTER */
 .container {
-  margin-top: clamp(50px, 10vh, 110px);
-  padding: 0 12px;
+  margin-top: 6vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-h1 {
-  font-size: clamp(26px, 4vw, 42px);
+/* 🔥 SCOREBOARD (NO BOX) */
+.score-box {
+  display: flex;
+  align-items: center;
+  gap: 50px;
+  padding: 10px 0;
+  background: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+/* GLOW DIVIDER */
+.divider {
+  width: 3px;
+  height: 70px;
+  background: linear-gradient(180deg, transparent, #00e0ff, #00ffd5, transparent);
+  animation: glow 2s infinite;
+}
+
+@keyframes glow {
+  50% { box-shadow: 0 0 12px #00ffd5; }
+}
+
+/* SCORE TEXT */
+.player span, .ai span {
+  font-size: 52px;
+  font-weight: 700;
+  text-shadow: 0 0 12px rgba(0,255,255,0.5);
+}
+
+.player p, .ai p {
+  margin: 5px 0 0;
+  opacity: 0.8;
   letter-spacing: 1px;
 }
 
-button {
-  padding: clamp(12px, 2.2vw, 18px) clamp(18px, 3.2vw, 30px);
-  margin: clamp(8px, 1.5vw, 14px);
-  font-size: clamp(17px, 2.6vw, 24px);
-  border: none;
+/* BUTTON AREA */
+.btn-group {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 25px;
+}
+
+/* GLASS BUTTONS */
+.btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 24px;
+  margin: 10px;
+  font-size: 18px;
   border-radius: 16px;
+  border: none;
   cursor: pointer;
-  transition: all 0.2s ease;
+  backdrop-filter: blur(12px);
+  background: rgba(255,255,255,0.12);
+  color: white;
+  transition: all 0.25s ease;
 }
 
-.choice-btn {
-  background: white;
-  color: #1e3c72;
-  font-weight: 600;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-}
-
-.choice-btn:hover {
-  transform: scale(1.1);
+.btn:hover {
+  transform: scale(1.12);
   box-shadow: 0 0 18px #00e0ff;
 }
 
-.choice-btn:active {
-  transform: scale(0.95);
+.emoji {
+  font-size: 24px;
 }
 
+/* RESULT */
+#result {
+  font-size: 26px;
+  margin-top: 15px;
+  font-weight: 600;
+}
+
+/* ROUND */
+#round {
+  margin-top: 15px;
+  font-size: 20px;
+  opacity: 0.9;
+}
+
+/* 💀 LOSE OVERLAY */
+.loseOverlay {
+  position: fixed;
+  top:0; left:0;
+  width:100%;
+  height:100%;
+  background: rgba(255,0,0,0.25);
+  pointer-events: none;
+  animation: fadeOut 0.25s forwards;
+}
+
+@keyframes fadeOut {
+  to { opacity: 0; }
+}
+
+/* 🎉 CONFETTI */
+.confetti {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+/* RESTART BUTTON */
 .restart-btn {
   background: #ff4d6d;
   color: white;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+  padding: 12px 22px;
+  border-radius: 14px;
+  margin-top: 20px;
+  border: none;
+  font-size: 16px;
+  transition: 0.2s;
 }
 
 .restart-btn:hover {
   transform: scale(1.1);
-  box-shadow: 0 0 18px #ff4d6d;
+  box-shadow: 0 0 15px #ff4d6d;
 }
 
 .hidden { display: none; }
 
-#result {
-  margin-top: 22px;
-  font-size: clamp(20px, 3vw, 30px);
-  font-weight: 700;
-}
-
-#score {
-  font-size: clamp(18px, 2.5vw, 24px);
-  margin-top: 12px;
-}
-
-#round {
-  font-size: clamp(20px, 3vw, 28px);
-}
-
-.glow {
-  box-shadow: 0 0 25px #00ffd5, 0 0 40px #00ffd5;
-  transform: scale(1.15);
-}
-
-.winFlash { animation: winFlash 0.3s; }
-.loseFlash { animation: loseFlash 0.3s; }
-
-@keyframes winFlash {
-  0% { background: #00ffcc; }
-  100% { background: linear-gradient(135deg, #1e3c72, #2a5298); }
-}
-
-@keyframes loseFlash {
-  0% { background: #ff4d6d; }
-  100% { background: linear-gradient(135deg, #1e3c72, #2a5298); }
-}
-
-footer {
-  margin-top: 90px;
-  font-size: clamp(13px, 2vw, 16px);
-  opacity: 0.75;
+/* COPYRIGHT LOCK */
+#copyright {
+  margin-top: 80px;
+  opacity: 0.7;
   user-select: none;
+  cursor: default;
 }
 </style>
 </head>
@@ -111,16 +167,29 @@ footer {
 
 <h1>🤖 Rock Paper Scissors</h1>
 
+<div class="score-box">
+  <div class="player">
+    <span id="playerScore">0</span>
+    <p>YOU</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="ai">
+    <span id="aiScore">0</span>
+    <p>AI</p>
+  </div>
+</div>
+
 <h3 id="round"></h3>
 
-<div>
-  <button id="rockBtn" class="choice-btn" onclick="play('rock')">✊ Rock</button>
-  <button id="paperBtn" class="choice-btn" onclick="play('paper')">✋ Paper</button>
-  <button id="scissorsBtn" class="choice-btn" onclick="play('scissors')">✌️ Scissors</button>
+<div class="btn-group">
+  <button class="btn" onclick="play('rock')"><span class="emoji">✊</span> Rock</button>
+  <button class="btn" onclick="play('paper')"><span class="emoji">✋</span> Paper</button>
+  <button class="btn" onclick="play('scissors')"><span class="emoji">✌️</span> Scissors</button>
 </div>
 
 <div id="result"></div>
-<div id="score"></div>
 
 <button id="restartBtn" class="restart-btn hidden" onclick="restart()">Play Again</button>
 
@@ -129,15 +198,10 @@ footer {
 <footer id="copyright">© Garvit 2026</footer>
 
 <script>
-let round = 1;
-let playerScore = 0;
-let aiScore = 0;
-let gameOver = false;
+let round = 1, playerScore = 0, aiScore = 0, gameOver = false;
+let cheatActive = false, tapCount = 0;
 
-// 🔥 CHEAT SYSTEM
-let cheatActive = false;
-let tapCount = 0;
-
+/* SECRET CHEAT */
 document.getElementById("copyright").addEventListener("click", () => {
   tapCount++;
   if (tapCount === 3) {
@@ -145,6 +209,9 @@ document.getElementById("copyright").addEventListener("click", () => {
     tapCount = 0;
   }
 });
+
+/* BLOCK RIGHT CLICK */
+document.addEventListener("contextmenu", e => e.preventDefault());
 
 const winMap = {
   rock: "scissors",
@@ -157,51 +224,75 @@ updateDisplay();
 function play(userChoice) {
   if (gameOver) return;
 
-  glowBtn(userChoice);
-
-  let aiChoice;
-
-  if (cheatActive) {
-    // 💀 ALWAYS WIN → 5-0
-    aiChoice = winMap[userChoice];
-  } else {
-    // NORMAL GAME (NO DRAW)
-    if (Math.random() < 0.35) {
-      aiChoice = winMap[userChoice];
-    } else {
-      aiChoice = counterMove(userChoice);
-    }
-  }
+  let aiChoice = cheatActive
+    ? winMap[userChoice]
+    : (Math.random() < 0.5 ? winMap[userChoice] : counterMove(userChoice));
 
   if (winMap[userChoice] === aiChoice) {
     playerScore++;
-    showResult("🎉 You Win!", true);
+    showResult("🎉 YOU WIN");
+    confettiExplosion();
   } else {
     aiScore++;
-    showResult("😢 AI Wins!", false);
-  }
-
-  if (round === 5) {
-    finalResult();
-    return;
+    showResult("💀 AI WINS");
+    loseEffect();
   }
 
   round++;
   updateDisplay();
+
+  if (round > 5) finalResult();
+}
+
+function showResult(text) {
+  document.getElementById("result").innerText = text;
+}
+
+/* 🎉 REAL CONFETTI EXPLOSION */
+function confettiExplosion() {
+  for (let i = 0; i < 30; i++) {
+    let div = document.createElement("div");
+    div.className = "confetti";
+    div.style.left = "50%";
+    div.style.top = "50%";
+    div.style.background = `hsl(${Math.random()*360},100%,50%)`;
+
+    let angle = Math.random() * 2 * Math.PI;
+    let distance = Math.random() * 300;
+
+    div.animate([
+      { transform: "translate(0,0)" },
+      { transform: `translate(${Math.cos(angle)*distance}px, ${Math.sin(angle)*distance}px)` }
+    ], {
+      duration: 600,
+      easing: "ease-out"
+    });
+
+    document.body.appendChild(div);
+    setTimeout(() => div.remove(), 600);
+  }
+}
+
+/* 💀 LOSE EFFECT */
+function loseEffect() {
+  let overlay = document.createElement("div");
+  overlay.className = "loseOverlay";
+  document.body.appendChild(overlay);
+  setTimeout(() => overlay.remove(), 250);
+
+  if (navigator.vibrate) navigator.vibrate(100);
 }
 
 function finalResult() {
   gameOver = true;
-  disableButtons();
 
-  let text = (playerScore > aiScore)
+  let text = playerScore > aiScore
     ? `🏆 YOU WON (${playerScore}/${aiScore})`
     : `💀 AI WON (${aiScore}/${playerScore})`;
 
   document.getElementById("result").innerText = text;
   document.getElementById("restartBtn").classList.remove("hidden");
 
-  // RESET CHEAT
   cheatActive = false;
 }
 
@@ -212,24 +303,9 @@ function restart() {
   gameOver = false;
 
   document.getElementById("restartBtn").classList.add("hidden");
-  enableButtons();
-  updateDisplay();
   document.getElementById("result").innerText = "";
-}
 
-function glowBtn(choice) {
-  let btn = document.getElementById(choice + "Btn");
-  btn.classList.add("glow");
-  setTimeout(() => btn.classList.remove("glow"), 300);
-}
-
-function showResult(text, win) {
-  document.getElementById("result").innerText = text;
-  document.body.classList.add(win ? "winFlash" : "loseFlash");
-
-  setTimeout(() => {
-    document.body.classList.remove("winFlash", "loseFlash");
-  }, 300);
+  updateDisplay();
 }
 
 function counterMove(move) {
@@ -239,21 +315,9 @@ function counterMove(move) {
 }
 
 function updateDisplay() {
-  document.getElementById("round").innerText = `Round ${round}/5`;
-  document.getElementById("score").innerText =
-    `Score → You: ${playerScore} | AI: ${aiScore}`;
-}
-
-function disableButtons() {
-  rockBtn.disabled = true;
-  paperBtn.disabled = true;
-  scissorsBtn.disabled = true;
-}
-
-function enableButtons() {
-  rockBtn.disabled = false;
-  paperBtn.disabled = false;
-  scissorsBtn.disabled = false;
+  document.getElementById("round").innerText = `Round ${Math.min(round,5)}/5`;
+  document.getElementById("playerScore").innerText = playerScore;
+  document.getElementById("aiScore").innerText = aiScore;
 }
 </script>
 
