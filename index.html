@@ -11,12 +11,29 @@ body {
   margin: 0;
   font-family: 'Poppins', sans-serif;
   text-align: center;
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
   color: white;
   overflow-x: hidden;
+
+  background: radial-gradient(circle at 20% 20%, #1c3a43, transparent 40%),
+              radial-gradient(circle at 80% 80%, #162c33, transparent 40%),
+              linear-gradient(135deg, #0f2027, #203a43, #2c5364);
 }
 
-/* CENTER */
+/* TOGGLE */
+#modeToggle {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: none;
+  background: rgba(255,255,255,0.1);
+  color: white;
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+}
+
+/* CONTAINER */
 .container {
   margin-top: 6vh;
   display: flex;
@@ -24,18 +41,13 @@ body {
   align-items: center;
 }
 
-/* 🔥 SCOREBOARD (NO BOX) */
+/* SCORE */
 .score-box {
   display: flex;
   align-items: center;
   gap: 50px;
-  padding: 10px 0;
-  background: none;
-  box-shadow: none;
-  border-radius: 0;
 }
 
-/* GLOW DIVIDER */
 .divider {
   width: 3px;
   height: 70px;
@@ -47,20 +59,13 @@ body {
   50% { box-shadow: 0 0 12px #00ffd5; }
 }
 
-/* SCORE TEXT */
 .player span, .ai span {
   font-size: 52px;
   font-weight: 700;
   text-shadow: 0 0 12px rgba(0,255,255,0.5);
 }
 
-.player p, .ai p {
-  margin: 5px 0 0;
-  opacity: 0.8;
-  letter-spacing: 1px;
-}
-
-/* BUTTON AREA */
+/* BUTTONS */
 .btn-group {
   display: flex;
   justify-content: center;
@@ -68,7 +73,6 @@ body {
   margin-top: 25px;
 }
 
-/* GLASS BUTTONS */
 .btn {
   display: flex;
   align-items: center;
@@ -82,7 +86,7 @@ body {
   backdrop-filter: blur(12px);
   background: rgba(255,255,255,0.12);
   color: white;
-  transition: all 0.25s ease;
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
 }
 
 .btn:hover {
@@ -90,30 +94,29 @@ body {
   box-shadow: 0 0 18px #00e0ff;
 }
 
+.btn:active {
+  transform: scale(0.95);
+}
+
 .emoji {
-  font-size: 24px;
+  font-size: 22px;
 }
 
 /* RESULT */
 #result {
   font-size: 26px;
   margin-top: 15px;
-  font-weight: 600;
 }
 
 /* ROUND */
 #round {
   margin-top: 15px;
-  font-size: 20px;
-  opacity: 0.9;
 }
 
-/* 💀 LOSE OVERLAY */
+/* LOSE EFFECT */
 .loseOverlay {
   position: fixed;
-  top:0; left:0;
-  width:100%;
-  height:100%;
+  inset: 0;
   background: rgba(255,0,0,0.25);
   pointer-events: none;
   animation: fadeOut 0.25s forwards;
@@ -123,49 +126,62 @@ body {
   to { opacity: 0; }
 }
 
-/* 🎉 CONFETTI */
+/* CONFETTI */
 .confetti {
   position: fixed;
   width: 8px;
   height: 8px;
-  border-radius: 2px;
-  pointer-events: none;
 }
 
-/* RESTART BUTTON */
+/* RESTART */
 .restart-btn {
   background: #ff4d6d;
-  color: white;
   padding: 12px 22px;
   border-radius: 14px;
   margin-top: 20px;
   border: none;
-  font-size: 16px;
-  transition: 0.2s;
-}
-
-.restart-btn:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 15px #ff4d6d;
+  color: white;
 }
 
 .hidden { display: none; }
 
-/* COPYRIGHT LOCK */
+/* COPYRIGHT */
 #copyright {
   margin-top: 80px;
   opacity: 0.7;
   user-select: none;
-  cursor: default;
+}
+
+/* POTATO MODE */
+body.potato {
+  background: #0f2027 !important;
+}
+
+body.potato * {
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+  animation: none !important;
+}
+
+body.potato .btn {
+  background: #222;
+  border-radius: 8px;
+}
+
+body.potato .player span,
+body.potato .ai span {
+  font-size: 36px;
 }
 </style>
 </head>
 
 <body>
 
+<button id="modeToggle">⚙️ Lite</button>
+
 <div class="container">
 
-<h1>🤖 Rock Paper Scissors</h1>
+<h1>Rock Paper Scissors</h1>
 
 <div class="score-box">
   <div class="player">
@@ -184,13 +200,12 @@ body {
 <h3 id="round"></h3>
 
 <div class="btn-group">
-  <button class="btn" onclick="play('rock')"><span class="emoji">✊</span> Rock</button>
-  <button class="btn" onclick="play('paper')"><span class="emoji">✋</span> Paper</button>
-  <button class="btn" onclick="play('scissors')"><span class="emoji">✌️</span> Scissors</button>
+  <button class="btn" onclick="play('rock')">✊ Rock</button>
+  <button class="btn" onclick="play('paper')">✋ Paper</button>
+  <button class="btn" onclick="play('scissors')">✌️ Scissors</button>
 </div>
 
 <div id="result"></div>
-
 <button id="restartBtn" class="restart-btn hidden" onclick="restart()">Play Again</button>
 
 </div>
@@ -200,18 +215,29 @@ body {
 <script>
 let round = 1, playerScore = 0, aiScore = 0, gameOver = false;
 let cheatActive = false, tapCount = 0;
+let potatoMode = false;
+
+const playerScoreEl = document.getElementById("playerScore");
+const aiScoreEl = document.getElementById("aiScore");
+const result = document.getElementById("result");
+const restartBtn = document.getElementById("restartBtn");
+const roundEl = document.getElementById("round");
+
+/* MODE TOGGLE */
+document.getElementById("modeToggle").onclick = () => {
+  potatoMode = !potatoMode;
+  document.body.classList.toggle("potato");
+  modeToggle.innerText = potatoMode ? "🚀 Full" : "⚙️ Lite";
+};
 
 /* SECRET CHEAT */
-document.getElementById("copyright").addEventListener("click", () => {
+document.getElementById("copyright").onclick = () => {
   tapCount++;
   if (tapCount === 3) {
     cheatActive = true;
     tapCount = 0;
   }
-});
-
-/* BLOCK RIGHT CLICK */
-document.addEventListener("contextmenu", e => e.preventDefault());
+};
 
 const winMap = {
   rock: "scissors",
@@ -224,9 +250,16 @@ updateDisplay();
 function play(userChoice) {
   if (gameOver) return;
 
-  let aiChoice = cheatActive
-    ? winMap[userChoice]
-    : (Math.random() < 0.5 ? winMap[userChoice] : counterMove(userChoice));
+  let aiChoice;
+
+  if (cheatActive) {
+    aiChoice = winMap[userChoice];
+  } else {
+    let winChance = potatoMode ? 0.15 : 0.5;
+    aiChoice = Math.random() < winChance
+      ? winMap[userChoice]
+      : counterMove(userChoice);
+  }
 
   if (winMap[userChoice] === aiChoice) {
     playerScore++;
@@ -245,79 +278,72 @@ function play(userChoice) {
 }
 
 function showResult(text) {
-  document.getElementById("result").innerText = text;
+  result.innerText = text;
 }
 
-/* 🎉 REAL CONFETTI EXPLOSION */
 function confettiExplosion() {
-  for (let i = 0; i < 30; i++) {
-    let div = document.createElement("div");
-    div.className = "confetti";
-    div.style.left = "50%";
-    div.style.top = "50%";
-    div.style.background = `hsl(${Math.random()*360},100%,50%)`;
+  for (let i = 0; i < 25; i++) {
+    let d = document.createElement("div");
+    d.className = "confetti";
+    d.style.left = "50%";
+    d.style.top = "50%";
+    d.style.background = `hsl(${Math.random()*360},100%,50%)`;
 
-    let angle = Math.random() * 2 * Math.PI;
-    let distance = Math.random() * 300;
+    let angle = Math.random()*2*Math.PI;
+    let dist = Math.random()*250;
 
-    div.animate([
+    d.animate([
       { transform: "translate(0,0)" },
-      { transform: `translate(${Math.cos(angle)*distance}px, ${Math.sin(angle)*distance}px)` }
-    ], {
-      duration: 600,
-      easing: "ease-out"
-    });
+      { transform: `translate(${Math.cos(angle)*dist}px, ${Math.sin(angle)*dist}px)` }
+    ], { duration: 600 });
 
-    document.body.appendChild(div);
-    setTimeout(() => div.remove(), 600);
+    document.body.appendChild(d);
+    setTimeout(()=>d.remove(),600);
   }
 }
 
-/* 💀 LOSE EFFECT */
 function loseEffect() {
-  let overlay = document.createElement("div");
-  overlay.className = "loseOverlay";
-  document.body.appendChild(overlay);
-  setTimeout(() => overlay.remove(), 250);
+  let o = document.createElement("div");
+  o.className = "loseOverlay";
+  document.body.appendChild(o);
+  setTimeout(()=>o.remove(),250);
 
-  if (navigator.vibrate) navigator.vibrate(100);
+  if (navigator.vibrate) navigator.vibrate(80);
 }
 
 function finalResult() {
   gameOver = true;
 
-  let text = playerScore > aiScore
+  result.innerText = playerScore > aiScore
     ? `🏆 YOU WON (${playerScore}/${aiScore})`
     : `💀 AI WON (${aiScore}/${playerScore})`;
 
-  document.getElementById("result").innerText = text;
-  document.getElementById("restartBtn").classList.remove("hidden");
-
+  restartBtn.classList.remove("hidden");
   cheatActive = false;
 }
 
 function restart() {
+  round = 1;
   playerScore = 0;
   aiScore = 0;
-  round = 1;
   gameOver = false;
 
-  document.getElementById("restartBtn").classList.add("hidden");
-  document.getElementById("result").innerText = "";
+  result.innerText = "";
+  restartBtn.classList.add("hidden");
 
   updateDisplay();
 }
 
-function counterMove(move) {
-  if (move === "rock") return "paper";
-  if (move === "paper") return "scissors";
+function counterMove(m) {
+  if (m==="rock") return "paper";
+  if (m==="paper") return "scissors";
   return "rock";
 }
 
 function updateDisplay() {
-  document.getElementById("round").innerText = `Round ${Math.min(round,5)}/5`;
-  document.getElementById("playerScore").innerText = playerScore;
-  document.getElementById("aiScore").innerText = aiScore;
+  roundEl.innerText = `Round ${Math.min(round,5)}/5`;
+  playerScoreEl.innerText = playerScore;
+  aiScoreEl.innerText = aiScore;
 }
 </script>
 
