@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Rockpaperscissor - ZGS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  text-align: center;
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  color: white;
+}
+
+.container {
+  margin-top: clamp(50px, 10vh, 110px);
+  padding: 0 12px;
+}
+
+h1 {
+  font-size: clamp(26px, 4vw, 42px);
+  letter-spacing: 1px;
+}
+
+button {
+  padding: clamp(12px, 2.2vw, 18px) clamp(18px, 3.2vw, 30px);
+  margin: clamp(8px, 1.5vw, 14px);
+  font-size: clamp(17px, 2.6vw, 24px);
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.choice-btn {
+  background: white;
+  color: #1e3c72;
+  font-weight: 600;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+}
+
+.choice-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 18px #00e0ff;
+}
+
+.choice-btn:active {
+  transform: scale(0.95);
+}
+
+.restart-btn {
+  background: #ff4d6d;
+  color: white;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+}
+
+.restart-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 18px #ff4d6d;
+}
+
+.hidden { display: none; }
+
+#result {
+  margin-top: 22px;
+  font-size: clamp(20px, 3vw, 30px);
+  font-weight: 700;
+}
+
+#score {
+  font-size: clamp(18px, 2.5vw, 24px);
+  margin-top: 12px;
+}
+
+#round {
+  font-size: clamp(20px, 3vw, 28px);
+}
+
+.glow {
+  box-shadow: 0 0 25px #00ffd5, 0 0 40px #00ffd5;
+  transform: scale(1.15);
+}
+
+.winFlash { animation: winFlash 0.3s; }
+.loseFlash { animation: loseFlash 0.3s; }
+
+@keyframes winFlash {
+  0% { background: #00ffcc; }
+  100% { background: linear-gradient(135deg, #1e3c72, #2a5298); }
+}
+
+@keyframes loseFlash {
+  0% { background: #ff4d6d; }
+  100% { background: linear-gradient(135deg, #1e3c72, #2a5298); }
+}
+
+footer {
+  margin-top: 90px;
+  font-size: clamp(13px, 2vw, 16px);
+  opacity: 0.75;
+  user-select: none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🤖 Rock Paper Scissors</h1>
+
+<h3 id="round"></h3>
+
+<div>
+  <button id="rockBtn" class="choice-btn" onclick="play('rock')">✊ Rock</button>
+  <button id="paperBtn" class="choice-btn" onclick="play('paper')">✋ Paper</button>
+  <button id="scissorsBtn" class="choice-btn" onclick="play('scissors')">✌️ Scissors</button>
+</div>
+
+<div id="result"></div>
+<div id="score"></div>
+
+<button id="restartBtn" class="restart-btn hidden" onclick="restart()">Play Again</button>
+
+</div>
+
+<footer id="copyright">© Garvit 2026</footer>
+
+<script>
+let round = 1;
+let playerScore = 0;
+let aiScore = 0;
+let gameOver = false;
+
+// 🔥 CHEAT SYSTEM
+let cheatActive = false;
+let tapCount = 0;
+
+document.getElementById("copyright").addEventListener("click", () => {
+  tapCount++;
+  if (tapCount === 3) {
+    cheatActive = true;
+    tapCount = 0;
+  }
+});
+
+const winMap = {
+  rock: "scissors",
+  paper: "rock",
+  scissors: "paper"
+};
+
+updateDisplay();
+
+function play(userChoice) {
+  if (gameOver) return;
+
+  glowBtn(userChoice);
+
+  let aiChoice;
+
+  if (cheatActive) {
+    // 💀 ALWAYS WIN → 5-0
+    aiChoice = winMap[userChoice];
+  } else {
+    // NORMAL GAME (NO DRAW)
+    if (Math.random() < 0.35) {
+      aiChoice = winMap[userChoice];
+    } else {
+      aiChoice = counterMove(userChoice);
+    }
+  }
+
+  if (winMap[userChoice] === aiChoice) {
+    playerScore++;
+    showResult("🎉 You Win!", true);
+  } else {
+    aiScore++;
+    showResult("😢 AI Wins!", false);
+  }
+
+  if (round === 5) {
+    finalResult();
+    return;
+  }
+
+  round++;
+  updateDisplay();
+}
+
+function finalResult() {
+  gameOver = true;
+  disableButtons();
+
+  let text = (playerScore > aiScore)
+    ? `🏆 YOU WON (${playerScore}/${aiScore})`
+    : `💀 AI WON (${aiScore}/${playerScore})`;
+
+  document.getElementById("result").innerText = text;
+  document.getElementById("restartBtn").classList.remove("hidden");
+
+  // RESET CHEAT
+  cheatActive = false;
+}
+
+function restart() {
+  playerScore = 0;
+  aiScore = 0;
+  round = 1;
+  gameOver = false;
+
+  document.getElementById("restartBtn").classList.add("hidden");
+  enableButtons();
+  updateDisplay();
+  document.getElementById("result").innerText = "";
+}
+
+function glowBtn(choice) {
+  let btn = document.getElementById(choice + "Btn");
+  btn.classList.add("glow");
+  setTimeout(() => btn.classList.remove("glow"), 300);
+}
+
+function showResult(text, win) {
+  document.getElementById("result").innerText = text;
+  document.body.classList.add(win ? "winFlash" : "loseFlash");
+
+  setTimeout(() => {
+    document.body.classList.remove("winFlash", "loseFlash");
+  }, 300);
+}
+
+function counterMove(move) {
+  if (move === "rock") return "paper";
+  if (move === "paper") return "scissors";
+  return "rock";
+}
+
+function updateDisplay() {
+  document.getElementById("round").innerText = `Round ${round}/5`;
+  document.getElementById("score").innerText =
+    `Score → You: ${playerScore} | AI: ${aiScore}`;
+}
+
+function disableButtons() {
+  rockBtn.disabled = true;
+  paperBtn.disabled = true;
+  scissorsBtn.disabled = true;
+}
+
+function enableButtons() {
+  rockBtn.disabled = false;
+  paperBtn.disabled = false;
+  scissorsBtn.disabled = false;
+}
+</script>
+
+</body>
+</html>
