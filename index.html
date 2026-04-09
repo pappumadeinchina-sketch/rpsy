@@ -14,9 +14,15 @@ body {
   color: white;
   overflow-x: hidden;
 
+  min-height: 100vh; /* 🔥 IMPORTANT */
+  
   background: radial-gradient(circle at 20% 20%, #1c3a43, transparent 40%),
               radial-gradient(circle at 80% 80%, #162c33, transparent 40%),
               linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+
+  background-repeat: no-repeat;  /* 🔥 prevents tiling */
+  background-size: cover;        /* 🔥 fills full screen */
+  background-attachment: fixed;  /* 🔥 smooth feel (optional) */
 }
 
 /* TOGGLE */
