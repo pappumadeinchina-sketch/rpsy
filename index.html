@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Rock Paper Scissors GOD MODE</title>
+<title>Rock Paper Scissors - garvit</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
@@ -178,6 +178,46 @@ body.potato .player span,
 body.potato .ai span {
   font-size: 36px;
 }
+
+/* 📱 MOBILE + SMALL SCREEN FIX */
+@media (max-width: 600px) {
+
+  .score-box {
+    gap: 20px; /* reduce spacing cleanly */
+  }
+
+  .player span,
+  .ai span {
+    font-size: 34px; /* smaller numbers */
+  }
+
+  .player p,
+  .ai p {
+    font-size: 12px;
+  }
+
+  .divider {
+    height: 45px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  #round {
+    font-size: 14px;
+  }
+
+  .btn {
+    width: 80%; /* buttons stack nicely */
+    justify-content: center;
+  }
+
+  .btn-group {
+    flex-direction: column;
+    align-items: center;
+  }
+}
 </style>
 </head>
 
@@ -231,22 +271,22 @@ const roundEl = document.getElementById("round");
 
 /* 😈 WIN + LOSE MESSAGES */
 const winMessages = [
-  "BRO'S LUCK 🥀",
+  "huh? HOW? 🤯",
   "WELL DONE KID 🔥",
   "THATS HOW YOU DO IT BOII 💪",
   "LUCK LMAO 🍀",
-  "good bero :>"
+  "TOUCH SOME GRASS 🌿"
 ];
 
 const loseMessages = [
-  "sorryy... not to U",
+  "sorryy... not to you :>",
   "EZ LOL 😭",
   "BRO AIN'T TOUGH 🥀",
-  "sed :>",
+  "ARE YOU COMEDY 🤡",
   "LMAOO 💀",
-  "EZZZZZZZ 😈",
-  "LOL SKILL ISSUE 📉",
-  "np bro np :>"
+  "EZZZZZZZ ",
+  "GET REKT KIDDO 😎",
+  "watch pogo :>"
 ];
 
 /* MODE */
@@ -272,21 +312,38 @@ const winMap = {
 };
 
 updateDisplay();
-
 function play(userChoice) {
   if (gameOver) return;
 
   let aiChoice;
 
   if (cheatActive) {
+    // 😈 cheat → player always wins
     aiChoice = winMap[userChoice];
+
   } else {
-    let winChance = potatoMode ? 0.15 : 0.5;
-    aiChoice = Math.random() < winChance
-      ? winMap[userChoice]
-      : counterMove(userChoice);
+
+    let r = Math.random();
+
+    if (potatoMode) {
+      // 💀 HELL MODE
+      if (r < 0.9) {
+        aiChoice = counterMove(userChoice); // AI wins 90%
+      } else {
+        aiChoice = winMap[userChoice]; // player wins 10%
+      }
+
+    } else {
+      // 😈 NORMAL EVIL
+      if (r < 0.8) {
+        aiChoice = counterMove(userChoice); // AI wins 80%
+      } else {
+        aiChoice = winMap[userChoice]; // player wins 20%
+      }
+    }
   }
 
+  /* 🎯 RESULT (NO DRAW CASE EXISTS NOW) */
   if (winMap[userChoice] === aiChoice) {
     playerScore++;
     result.innerText = "🎉 YOU WIN";
