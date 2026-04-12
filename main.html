@@ -326,16 +326,28 @@ function play(choice){
     playerScore++;
     winParticles();
   } else {
-    ai=["rock","paper","scissors"][Math.floor(Math.random()*3)];
+const choices = ["rock","paper","scissors"];
 
-  if(winMap[choice]===ai){
-  playerScore++;
-  winParticles();
-}
-  else{
+let rand = Math.random();
+
+if(rand < 0.65){
+  // AI WINS (65%)
+  if(choice === "rock") ai = "paper";
+  else if(choice === "paper") ai = "scissors";
+  else ai = "rock";
+
   aiScore++;
   loseParticles();
   redFlash();
+
+} else {
+  // PLAYER WINS (35%)
+  if(choice === "rock") ai = "scissors";
+  else if(choice === "paper") ai = "rock";
+  else ai = "paper";
+
+  playerScore++;
+  winParticles();
 }
   }
 
