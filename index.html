@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>RPS AI</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
@@ -53,41 +53,46 @@
     }
 
     /* CENTER CONTENT */
-    .center {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      text-align: center;
-      z-index: 2;
-    }
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 2;
 
-    h1 {
-      font-size: 48px;
-      margin: 0;
-      text-shadow: 0 0 25px #00eaff;
-    }
+  width: 90%;
+  max-width: 900px;
+}
 
-    p {
-      margin-top: 10px;
-      font-size: 14px;
-      color: #00eaffcc;
-      letter-spacing: 2px;
-    }
+h1 {
+  font-size: clamp(32px, 6vw, 70px);
+  margin: 0;
+  text-shadow: 0 0 25px #00eaff;
+}
 
-    .play-btn {
-      margin-top: 40px;
-      padding: 18px 60px;
-      font-size: 22px;
-      border: 2px solid #00eaff;
-      background: transparent;
-      color: #00eaff;
-      cursor: pointer;
-      transition: 0.3s;
-      box-shadow: 0 0 15px #00eaff;
-      border-radius: 6px;
-    }
+p {
+  margin-top: 10px;
+  font-size: clamp(12px, 2vw, 18px);
+  color: #00eaffcc;
+  letter-spacing: 2px;
+}
 
+.play-btn {
+  margin-top: 40px;
+  padding: clamp(14px, 3vw, 22px) clamp(40px, 8vw, 80px);
+  font-size: clamp(16px, 3vw, 26px);
+
+  border: 2px solid #00eaff;
+  background: transparent;
+  color: #00eaff;
+
+  cursor: pointer;
+  transition: 0.3s;
+
+  box-shadow: 0 0 15px #00eaff;
+  border-radius: 8px;
+}
     .play-btn:hover {
       background: #00eaff;
       color: black;
