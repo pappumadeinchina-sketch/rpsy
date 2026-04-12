@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>RPS AI</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: #020617;
+      font-family: 'Orbitron', sans-serif;
+      color: #00eaff;
+    }
+
+    /* GRID BACKGROUND */
+    .grid {
+      position: fixed;
+      top: -50%;
+      left: -50%;
+      width: 200vw;
+      height: 200vh;
+
+      background:
+        linear-gradient(rgba(0,234,255,0.12) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,234,255,0.12) 1px, transparent 1px);
+
+      background-size: 50px 50px;
+
+      transform: perspective(800px) rotateX(60deg);
+      animation: gridMove 6s linear infinite;
+
+      z-index: 0;
+    }
+
+    @keyframes gridMove {
+      0% {
+        transform: perspective(800px) rotateX(60deg) translateY(0);
+      }
+      100% {
+        transform: perspective(800px) rotateX(60deg) translateY(200px);
+      }
+    }
+
+    /* DARK OVERLAY */
+    .overlay {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, transparent 40%, #020617 90%);
+      z-index: 1;
+    }
+
+    /* CENTER CONTENT */
+    .center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      z-index: 2;
+    }
+
+    h1 {
+      font-size: 48px;
+      margin: 0;
+      text-shadow: 0 0 25px #00eaff;
+    }
+
+    p {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #00eaffcc;
+      letter-spacing: 2px;
+    }
+
+    .play-btn {
+      margin-top: 40px;
+      padding: 18px 60px;
+      font-size: 22px;
+      border: 2px solid #00eaff;
+      background: transparent;
+      color: #00eaff;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 0 15px #00eaff;
+      border-radius: 6px;
+    }
+
+    .play-btn:hover {
+      background: #00eaff;
+      color: black;
+      box-shadow: 0 0 40px #00eaff;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="grid"></div>
+<div class="overlay"></div>
+
+<div class="center">
+  <h1>Rock Paper Scissor AI</h1>
+  <p>Click "PLAY" button to continue</p>
+  <button class="play-btn" onclick="startGame()">PLAY</button>
+</div>
+
+<audio id="clickSound" src="https://www.soundjay.com/buttons_c2026/sounds/button-3.mp3"></audio>
+
+<script>
+function startGame() {
+  document.getElementById("clickSound").play();
+  document.documentElement.requestFullscreen();
+
+  setTimeout(() => {
+    window.location.href = "rock.html";
+  }, 800);
+}
+</script>
+
+</body>
+</html>
