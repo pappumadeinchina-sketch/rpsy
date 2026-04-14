@@ -7,7 +7,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
 
 <style>
-*{user-select:none;}
+*{
+  user-select:none;
+  -webkit-tap-highlight-color: transparent;
+}
 
 body {
   margin: 0;
@@ -22,7 +25,7 @@ body {
               linear-gradient(135deg, #050b12, #07131d, #0a1c28);
 }
 
-/* MOVING GRID */
+/* GRID */
 body::before {
   content:"";
   position:fixed;
@@ -35,7 +38,6 @@ body::before {
   animation:gridMove 8s linear infinite;
   z-index:0;
 }
-
 @keyframes gridMove {
   0% { transform: perspective(900px) rotateX(60deg) translateY(0); }
   100% { transform: perspective(900px) rotateX(60deg) translateY(200px); }
@@ -49,13 +51,28 @@ body::after {
   z-index:1;
 }
 
-/* ✅ FIX: allow clicks through background */
-body::before,
-body::after {
-  pointer-events: none;
+body::before,body::after{pointer-events:none;}
+
+/* BG BUTTON */
+#modeToggle {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 1px solid #00eaff;
+  background: rgba(0, 0, 0, 0.35);
+  color: #00eaff;
+  cursor: pointer;
+  z-index: 10;
 }
 
-/* LITE MODE */
+body.potato #modeToggle {
+  color: #ff4d4d;
+  border-color: #ff4d4d;
+  background: rgba(255, 0, 0, 0.15);
+}
+
 body.potato::before,
 body.potato::after {
   display:none !important;
@@ -64,54 +81,33 @@ body.potato {
   background:#0b0f14 !important;
 }
 
-/* LITE BUTTON */
-#modeToggle {
-  position: fixed;
-  top: 15px;
-  right: 15px;
-  padding: 10px 18px;
-  border-radius: 999px;
-
-  border: 1px solid #00eaff;
-  background: rgba(0, 0, 0, 0.35);
-  color: #00eaff;
-
-  cursor: pointer;
-  z-index: 10;
-  transition: all 0.25s ease;
-}
-
-/* 🔴 ACTIVE (LITE MODE ON) */
-body.potato #modeToggle {
-  color: #ff4d4d;
-  border-color: #ff4d4d;
-  background: rgba(255, 0, 0, 0.15);
-  box-shadow: 0 0 12px rgba(255,0,0,0.6);
-}
-
 /* CONTAINER */
 .container {
   position:relative;
   z-index:2;
-  margin-top:5vh;
+  margin-top:4vh;
+  padding:10px;
+}
+
+h1{
+  font-size: clamp(28px,6vw,60px);
 }
 
 /* SCORE */
-.score-box {
+.score-box{
   display:flex;
   justify-content:center;
   align-items:center;
-  gap:50px;
+  gap: clamp(20px,6vw,80px);
 }
 
 .player span,.ai span{
-  font-size:60px;
+  font-size: clamp(40px,10vw,80px);
 }
 
-/* DIVIDER ANIM */
 .divider{
   width:3px;
-  height:90px;
+  height: clamp(60px,12vw,100px);
   background:#00eaff;
   animation:pulse 1.5s infinite;
 }
@@ -123,33 +119,22 @@ body.potato #modeToggle {
 
 /* BUTTONS */
 .btn{
-  padding: clamp(14px,3vw,20px) clamp(20px,5vw,30px);
+  padding: clamp(14px,3vw,22px) clamp(25px,6vw,45px);
   margin: 10px;
-  border-radius: 16px;
+  border-radius: 18px;
   border: 1px solid #00eaff;
   background: rgba(0,234,255,0.08);
   color:#bffaff;
   cursor:pointer;
-  font-size: clamp(14px,3vw,18px);
-  transition: all 0.25s ease;
+  font-size: clamp(16px,4vw,20px);
 }
 
 .btn:hover{
-  background: #00eaff;
-  color: #001a22;
-  box-shadow: 0 0 15px #00eaff, 0 0 40px rgba(0,234,255,0.5);
-  transform: scale(1.08);
+  background:#00eaff;
+  color:#001a22;
 }
 
-* {
-  -webkit-tap-highlight-color: transparent;
-}
-
-button, div, footer {
-  outline: none;
-  -webkit-focus-ring-color: transparent;
-}
-/* FULLSCREEN RESULT */
+/* OVERLAY ANIMATION */
 .overlay {
   position:fixed;
   inset:0;
@@ -169,28 +154,22 @@ button, div, footer {
 @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
 @keyframes zoomIn{from{transform:scale(0.7);}to{transform:scale(1);}}
 
-/* RESTART */
+/* RESTART FIXED */
 #restartBtn{
   display:none;
-  margin-top: 30px;
-
+  margin-top:30px;
   position: relative;
   left: 50%;
   transform: translateX(-50%);
-
   padding: clamp(14px,3vw,20px) clamp(30px,6vw,50px);
   font-size: clamp(14px,3vw,18px);
-
   border-radius: 20px;
   border: 1px solid #00eaff;
-
   background: rgba(0,234,255,0.1);
   color:#bffaff;
-
   cursor:pointer;
   transition: all 0.3s ease;
 }
-
 #restartBtn:hover{
   transform: translateX(-50%) scale(1.1);
   background:#00eaff;
@@ -198,51 +177,21 @@ button, div, footer {
   box-shadow: 0 0 20px #00eaff;
 }
 
-/* COPYRIGHT */
-#copyright{
-  margin-top:30px;
-  cursor:default; /* remove button feel */
-  position: relative;
-  z-index: 9999;
-
-  -webkit-tap-highlight-color: transparent; /* remove blue flash */
-  user-select: none;
-
-  pointer-events: auto;
-}
-
-h1{
-  font-size: clamp(36px,7vw,70px);
-}
-
-.player span,.ai span{
-  font-size: clamp(50px,10vw,80px);
-}
-
-.score-box{
-  gap: clamp(30px,8vw,90px);
-}
-
+/* FX */
 .particle{
   position: fixed;
   width:8px;
   height:8px;
   left:50%;
   top:50%;
-  z-index:999;
 }
-
 .loseFlash {
   position: fixed;
   inset: 0;
   background: rgba(255,0,0,0.35);
-  z-index: 999;
   animation: redFade 0.4s forwards;
 }
-
-@keyframes redFade {
-  to { opacity: 0; }
-}
+@keyframes redFade { to { opacity: 0; } }
 </style>
 </head>
 
@@ -268,23 +217,19 @@ h1{
   </div>
 </div>
 
-<div class="btn-group">
-  <button class="btn" onclick="play('rock')">✊ Rock</button>
-  <button class="btn" onclick="play('paper')">✋ Paper</button>
-  <button class="btn" onclick="play('scissors')">✌ Scissors</button>
+<div>
+  <button class="btn" onclick="play()">✊ Rock</button>
+  <button class="btn" onclick="play()">✋ Paper</button>
+  <button class="btn" onclick="play()">✌ Scissors</button>
 </div>
 
 <button id="restartBtn" onclick="restart()">Restart</button>
 
 </div>
 
-<footer id="copyright">© Garvit 2026</footer>
-
 <script>
 let round=1,playerScore=0,aiScore=0,gameOver=false;
-let cheat=false,taps=0,potato=false;
-
-const winMap={rock:"scissors",paper:"rock",scissors:"paper"};
+let cheat=false,potato=false;
 
 const winMsgs=[
 " U R LUCKY, NOT SKILLED 😎",
@@ -303,68 +248,99 @@ const loseMsgs=[
 "*bark* *bark* 🐶"
 ];
 
-/* LITE */
-document.getElementById("modeToggle").onclick=()=>{
+const playerScoreEl=document.getElementById("playerScore");
+const aiScoreEl=document.getElementById("aiScore");
+const restartBtn=document.getElementById("restartBtn");
+
+/* BG */
+modeToggle.onclick=()=>{
   potato=!potato;
   document.body.classList.toggle("potato",potato);
 };
 
-/* CHEAT (same logic, now works due to fix) */
-document.getElementById("copyright").onclick=()=>{
-  taps++;
-  if(taps===3){
-    cheat=true;
-    taps=0;
-  }
-};
-
-/* FULLSCREEN RESULT */
+/* MESSAGE */
 function showMsg(text){
-  const o=document.createElement("div");
+  let o=document.createElement("div");
   o.className="overlay";
   o.innerHTML=`<div class="overlay-text">${text}</div>`;
   document.body.appendChild(o);
-  setTimeout(()=>o.remove(),3000);
+  setTimeout(()=>o.remove(),2500);
 }
 
-/* GAME */
-function play(choice){
-  if(gameOver)return;
+/* FLEXIBLE Z DETECTION */
+function detectZ(points){
+  if(points.length<10) return false;
 
-  let ai;
+  let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;
+  points.forEach(p=>{
+    minX=Math.min(minX,p.x);
+    maxX=Math.max(maxX,p.x);
+    minY=Math.min(minY,p.y);
+    maxY=Math.max(maxY,p.y);
+  });
+
+  let w=maxX-minX,h=maxY-minY;
+  if(w<40||h<40) return false;
+
+  let p1=points.slice(0,points.length/3);
+  let p2=points.slice(points.length/3,2*points.length/3);
+  let p3=points.slice(2*points.length/3);
+
+  function dir(p){
+    let dx=0,dy=0;
+    for(let i=1;i<p.length;i++){
+      dx+=p[i].x-p[i-1].x;
+      dy+=p[i].y-p[i-1].y;
+    }
+    return {dx,dy};
+  }
+
+  let d1=dir(p1),d2=dir(p2),d3=dir(p3);
+
+  return (d1.dx>15 && d2.dx<-10 && d2.dy>10 && d3.dx>15);
+}
+
+/* TOUCH */
+let tpts=[],ttrack=false;
+document.addEventListener("touchstart",e=>{
+  if(e.touches.length===1){tpts=[];ttrack=true;}
+});
+document.addEventListener("touchmove",e=>{
+  if(!ttrack)return;
+  let t=e.touches[0];
+  tpts.push({x:t.clientX,y:t.clientY});
+});
+document.addEventListener("touchend",()=>{
+  if(ttrack && detectZ(tpts)) cheat=true;
+  ttrack=false;
+});
+
+/* MOUSE */
+let mpts=[],mtrack=false;
+document.addEventListener("mousedown",()=>{mpts=[];mtrack=true;});
+document.addEventListener("mousemove",e=>{
+  if(!mtrack)return;
+  mpts.push({x:e.clientX,y:e.clientY});
+});
+document.addEventListener("mouseup",()=>{
+  if(mtrack && detectZ(mpts)) cheat=true;
+  mtrack=false;
+});
+
+/* GAME */
+function play(){
+  if(gameOver)return;
 
   if(cheat){
     playerScore++;
     winParticles();
   } else {
-const choices = ["rock","paper","scissors"];
-
-let rand = Math.random();
-
-if(rand < 0.65){
-  // AI WINS (65%)
-  if(choice === "rock") ai = "paper";
-  else if(choice === "paper") ai = "scissors";
-  else ai = "rock";
-
-  aiScore++;
-  loseParticles();
-  redFlash();
-
-} else {
-  // PLAYER WINS (35%)
-  if(choice === "rock") ai = "scissors";
-  else if(choice === "paper") ai = "rock";
-  else ai = "paper";
-
-  playerScore++;
-  winParticles();
-}
+    Math.random()<0.65 ? (aiScore++,loseParticles(),redFlash())
+                       : (playerScore++,winParticles());
   }
 
   round++;
   update();
-
   if(round>5) end();
 }
 
@@ -377,9 +353,8 @@ function end(){
   gameOver=true;
 
   let msg;
-
   if(cheat){
-    msg="AI: Losing doesn’t feel that bad when it’s you.";
+    msg="Losing doesn’t feel that bad when it’s you.";
   } else if(playerScore>aiScore){
     msg=winMsgs[Math.floor(Math.random()*winMsgs.length)];
   } else {
@@ -387,92 +362,47 @@ function end(){
   }
 
   showMsg(msg);
-  document.getElementById("restartBtn").style.display="block";
+  restartBtn.style.display="block";
 }
 
 function restart(){
-  round=1;
-  playerScore=0;
-  aiScore=0;
-  gameOver=false;
-  cheat=false;
-  taps=0;
+  round=1;playerScore=0;aiScore=0;gameOver=false;cheat=false;
   update();
-  document.getElementById("restartBtn").style.display="none";
+  restartBtn.style.display="none";
 }
 
-const playerScoreEl=document.getElementById("playerScore");
-const aiScoreEl=document.getElementById("aiScore");
-
-update();
-
+/* FX */
 function winParticles(){
-  for(let i=0;i<25;i++){
+  for(let i=0;i<15;i++){
     let p=document.createElement("div");
     p.className="particle";
     document.body.appendChild(p);
-
-    let angle=Math.random()*Math.PI*2;
-    let dist=200;
-
+    let a=Math.random()*6.28,d=200;
     p.style.background=`hsl(${Math.random()*360},100%,50%)`;
-
-    p.animate([
-      {transform:"translate(0,0)"},
-      {transform:`translate(${Math.cos(angle)*dist}px,${Math.sin(angle)*dist}px)`}
-    ],{duration:700});
-
-    setTimeout(()=>p.remove(),700);
-  }
-}
-
-function loseParticles(){
-  for(let i=0;i<20;i++){
-    let p=document.createElement("div");
-    p.className="particle";
-    document.body.appendChild(p);
-
-    let angle=Math.random()*Math.PI*2;
-    let dist=150;
-
-    p.style.background="red";
-
-    p.animate([
-      {transform:"translate(0,0)"},
-      {transform:`translate(${Math.cos(angle)*dist}px,${Math.sin(angle)*dist}px)`}
-    ],{duration:600});
-
+    p.animate([{transform:"translate(0,0)"},{transform:`translate(${Math.cos(a)*d}px,${Math.sin(a)*d}px)`}],{duration:600});
     setTimeout(()=>p.remove(),600);
   }
 }
-
+function loseParticles(){
+  for(let i=0;i<10;i++){
+    let p=document.createElement("div");
+    p.className="particle";
+    document.body.appendChild(p);
+    let a=Math.random()*6.28,d=150;
+    p.style.background="red";
+    p.animate([{transform:"translate(0,0)"},{transform:`translate(${Math.cos(a)*d}px,${Math.sin(a)*d}px)`}],{duration:500});
+    setTimeout(()=>p.remove(),500);
+  }
+}
 function redFlash(){
   let d=document.createElement("div");
   d.className="loseFlash";
   document.body.appendChild(d);
-  setTimeout(()=>d.remove(),400);
+  setTimeout(()=>d.remove(),300);
 }
 
-const music = document.getElementById("bgMusic");
-
-/* try to unmute after short delay */
-setTimeout(() => {
-  music.muted = false;
-  music.volume = 0.4;
-  music.play().catch(()=>{});
-}, 1000);
-
-function goFullScreen(){
-  if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen().catch(()=>{});
-  }
-}
-
-/* trigger fullscreen on first interaction */
-document.addEventListener("click", goFullScreen, { once: true });
+update();
 </script>
-<audio id="bgMusic" autoplay loop muted>
-  <source src="https://downloads.khinsider.com/game-soundtracks/album/project-igi/Project%2520IGI%2520-%2520menu.mp3" type="audio/mp3">
-</audio>
+
 </body>
 </html>
