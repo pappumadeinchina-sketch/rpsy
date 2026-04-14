@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -142,6 +141,14 @@ body.potato #modeToggle {
   transform: scale(1.08);
 }
 
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button, div, footer {
+  outline: none;
+  -webkit-focus-ring-color: transparent;
+}
 /* FULLSCREEN RESULT */
 .overlay {
   position:fixed;
@@ -194,9 +201,14 @@ body.potato #modeToggle {
 /* COPYRIGHT */
 #copyright{
   margin-top:30px;
-  cursor:pointer;
+  cursor:default; /* remove button feel */
   position: relative;
-  z-index: 9999; /* extra safety */
+  z-index: 9999;
+
+  -webkit-tap-highlight-color: transparent; /* remove blue flash */
+  user-select: none;
+
+  pointer-events: auto;
 }
 
 h1{
@@ -275,10 +287,9 @@ let cheat=false,taps=0,potato=false;
 const winMap={rock:"scissors",paper:"rock",scissors:"paper"};
 
 const winMsgs=[
-"NICEE!! 😎🔥",
-"LUCK BUT STARTIN WITH",
+" U R LUCKY, NOT SKILLED 😎",
+"Peak detaling by aditya dhar 🔥",
 "LUCK LMAO 😂",
-"TOUCH SOME GRASS 🌿"
 ];
 
 const loseMsgs=[
